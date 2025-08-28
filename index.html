@@ -95,17 +95,21 @@
   };
 
   var DATA={
-    icons:[{id:'ausbildung',label:'Ausbildung',icon:'folder'},{id:'erfahrung',label:'Berufserfahrung',icon:'folder'},{id:'portfolio',label:'Portfolio',icon:'pc'}],
-    ausbildung:[
+    icons:[
+      {id:'ausbildung',label:'Ausbildung',icon:'folder'},
+      {id:'erfahrung',label:'Berufserfahrung',icon:'folder'},
+      {id:'portfolio',label:'Portfolio',icon:'pc'}
+    ],
+    ausbildung:[  
       {period:'08/2016 - 08/2020',title:'Ausbildung Mediamatiker',place:'HKV Schaffhausen – Lehrbetrieb: sasag Kabelkommunikation AG'}
     ],
     zertifikate:['English Certificate B2 (First)','Französisch Zertifikat DELF B2'],
     erfahrung:[
-      {period:'08/2020 - 12/2020',company:'sasag Kabelkommunikation AG',items:['Printdesign + Produktdesign','Webdesign (WordPress/HTML/CSS/PHP)','Videografie/Fotografie','Support/Beratung/Verkauf']},
-      {period:'01/2021 - 05/2021',company:'Rekrutenschule',items:[]},
-      {period:'06/2021 - 07/2022',company:'Laserhaus GmbH',items:['Webdesign (CMS/HTML/CSS/PHP)','Grafik-Daten für den Laser (Illustrator)','Produktfotografie + Videografie','Marketing (Paid Social, Paid Search)']},
       {period:'07/2022 - heute',company:'betterview AG',items:['Brand Design & Social Organic','Creatives für Paid Social, (D)OOH, PR etc.','Fotografie, Videografie','Aufbau und Führung des Medienteams']},
-      {period:'09/2021 - heute',company:'Freelancing 20%',items:['Fotografie & Videografie','Grafikdesign','Ads Produktionen für Paid Social']}
+      {period:'09/2021 - heute',company:'Freelancing 20%',items:['Fotografie & Videografie','Grafikdesign','Ads Produktionen für Paid Social']},
+      {period:'06/2021 - 07/2022',company:'Laserhaus GmbH',items:['Webdesign (CMS/HTML/CSS/PHP)','Grafik-Daten für den Laser (Illustrator)','Produktfotografie + Videografie','Marketing (Paid Social, Paid Search)']},
+      {period:'01/2021 - 05/2021',company:'Rekrutenschule',items:[]},
+      {period:'08/2020 - 12/2020',company:'sasag Kabelkommunikation AG',items:['Printdesign + Produktdesign','Webdesign (WordPress/HTML/CSS/PHP)','Videografie/Fotografie','Support/Beratung/Verkauf']}
     ],
     personalien:{Geburtsdatum:'06.07.2000',Adresse:'Vortstadt 3',Wohnort:'8200 Schaffhausen',Telefon:'078 926 36 24',EMail:'gioelesanapo@icloud.com'},
     sprachen:[{name:'Deutsch',level:'Muttersprache'},{name:'Englisch',level:'fliessend'},{name:'Französisch',level:'Fortgeschritten (schriftlich)'},{name:'Italienisch',level:'Fortgeschritten (schriftlich)'}],
@@ -153,16 +157,9 @@
 
   function buildAusbildung(){ var s='<h3>Ausbildung</h3><ul class="list">'; DATA.ausbildung.forEach(function(a){ s+='<li class="li"><strong>'+a.period+'</strong><br>'+a.title+' <span class="muted">– '+a.place+'</span></li>'; }); s+='</ul>'; if(DATA.zertifikate.length){ s+='<h4 style="margin:12px 0 6px">Zertifikate</h4><ul class="list">'; DATA.zertifikate.forEach(function(z){ s+='<li class="li">'+z+'</li>';}); s+='</ul>'; } return s; }
   function buildErfahrung(){ var s='<h3>Berufliche Erfahrungen</h3>'; DATA.erfahrung.forEach(function(job){ s+='<div class="li"><div><strong>'+job.period+'</strong> – '+job.company+'</div>'; if(job.items.length){ s+='<ul>'; job.items.forEach(function(i){ s+='<li>'+i+'</li>';}); s+='</ul>'; } s+='</div>'; }); return s; }
-  function buildAboutIntro(){ var s=''; s+='<p>Mein erster eigener PC lief noch mit Windows 98, eine langsame, etwas klapprige Kiste. Trotzdem war er für mich das Tor in eine neue Welt.
-
-Anfänglich setzte ich meine Energie dazu ein, Lösungen zu finden, die Sperrprogramme, welche von der Mutter zur Beschränkung der Bildschirmzeit eingesetzt wurden, zu umgehen und Bezahl-Software zu hacken.
-Schon bald entdeckte ich die Möglichkeiten der Bildbearbeitung und die damit verbundenen Chancen, meine Kreativität auszuleben.
-
-Mit 12 habe ich gelernt, Photoshop zu cracken, um meine Freunde digital zu verunstalten, und mit Windows Movie Maker Lego-Stop-Motion-Filme gebastelt. 
-
-Diese Neugier und Kreativität von damals sind bis heute die Basis für meine Arbeit als Creative. Ideen entwickeln, Technologien nutzen und Inhalte schaffen, die wirken.<p><em>Hier kommen die weniger interessanten Facts:</em></p>'; return s; }
+  function buildAboutIntro(){ var s=''; s+='<p>Mein erster eigener PC lief noch mit Windows 98, eine langsame, etwas klapprige Kiste. Trotzdem war er für mich das Tor in eine neue Welt.</p>'; s+='<p>Anfänglich setzte ich meine Energie dazu ein, Lösungen zu finden, die Sperrprogramme, welche von der Mutter zur Beschränkung der Bildschirmzeit eingesetzt wurden, zu umgehen und Bezahl-Software zu hacken. Schon bald entdeckte ich die Möglichkeiten der Bildbearbeitung und die damit verbundenen Chancen, meine Kreativität auszuleben.</p>'; s+='<p>Mit 12 habe ich gelernt, Photoshop zu cracken, um meine Freunde digital zu verunstalten, und mit Windows Movie Maker Lego-Stop-Motion-Filme gebastelt.</p>'; s+='<p>Diese Neugier und Kreativität von damals sind bis heute die Basis für meine Arbeit als Creative. Ideen entwickeln, Technologien nutzen und Inhalte schaffen, die wirken.</p>'; return s; }
   function buildAbout(){ var p=DATA.personalien, s='<h3>Über mich</h3>'+buildAboutIntro(); s+='<h4>Personalien</h4><div class="kv">'+'<div class="k">Geburtsdatum</div><div>'+p.Geburtsdatum+'</div>'+'<div class="k">Adresse</div><div>'+p.Adresse+'</div>'+'<div class="k">Wohnort</div><div>'+p.Wohnort+'</div>'+'<div class="k">Telefon</div><div><a href="tel:+41789263624">'+p.Telefon+'</a></div>'+'<div class="k">E‑Mail</div><div><a href="mailto:'+p.EMail+'">'+p.EMail+'</a></div>'+'</div>'; s+='<h4>Sprachen</h4><ul class="list">'; DATA.sprachen.forEach(function(x){ s+='<li class="li"><strong>'+x.name+'</strong> – '+x.level+'</li>';}); s+='</ul>'; s+='<h4>Interessen</h4><ul class="list">'; DATA.interessen.forEach(function(x){ s+='<li class="li">'+x+'</li>';}); s+='</ul>'; return s; }
-  function buildPortfolio(){ var s='<h3>Portfolio</h3><p class="muted">Wird gerade kuratiert – auf Anfrage sende ich dir gerne Projekte (Fotografie, Videografie, Ads, Projekte).</p>'; return s; }
+  function buildPortfolio(){ return '<h3>Portfolio</h3><p class="muted">Wird gerade kuratiert – auf Anfrage sende ich dir gerne Projekte (Fotografie, Videografie, Ads, Projekte).</p>'; }
 
   function makeIcon(obj){ var b=document.createElement('button'); b.className='icon'; b.title=obj.label; b.setAttribute('aria-label',obj.label); var i=document.createElement('img'); i.src=ICONS[obj.icon]; i.alt=obj.label; var l=document.createElement('div'); l.className='label'; l.textContent=obj.label; b.appendChild(i); b.appendChild(l); var isTouch=('ontouchstart' in window) || (navigator.maxTouchPoints>0); b.addEventListener('click',function(){ document.querySelectorAll('.icon').forEach(function(x){x.classList.remove('selected')}); b.classList.add('selected'); if(isTouch) openApp(obj.id,obj.label); }); b.addEventListener('dblclick',function(){ if(!isTouch) openApp(obj.id,obj.label); }); b.addEventListener('keydown',function(e){ if(e.key==='Enter') openApp(obj.id,obj.label); }); return b; }
   function renderDesktop(){ desktop.innerHTML=''; DATA.icons.forEach(function(x){ desktop.appendChild(makeIcon(x)); }); }
