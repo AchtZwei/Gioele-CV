@@ -26,7 +26,7 @@
   .controls{display:flex;gap:4px}
   .btn{width:20px;height:20px;border:2px solid var(--win-dark);box-shadow:inset -2px -2px 0 var(--win-dark), inset 2px 2px 0 var(--win-light);background:var(--win-mid);display:grid;place-items:center;cursor:pointer;font-size:14px}
   .btn:active{box-shadow:inset -2px -2px 0 var(--win-light), inset 2px 2px 0 var(--win-dark)}
-  .content{position:relative;padding:12px;overflow:auto;background:var(--win);flex:1}
+  .content{position:relative;padding:12px;overflow:auto;background:var(--win);flex:1;max-height:100%}
   .content::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.16;background-image:linear-gradient(rgba(0,0,0,.08)1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.08)1px,transparent 1px);background-size:var(--px) var(--px),var(--px) var(--px)}
   .list{background:var(--win);border:2px solid var(--win-dark);box-shadow:inset -2px -2px 0 var(--win-dark), inset 2px 2px 0 var(--win-light);padding:0;margin:0;list-style:none}
   .li{padding:8px 10px;border-bottom:1px solid #b0b0b0;font-size:14px}
@@ -56,7 +56,8 @@
   @media (max-width:640px){
     .desktop{grid-template-columns:repeat(auto-fill,minmax(90px,1fr));grid-auto-rows:100px;inset:0 0 44px 0}
     .icon{width:90px;height:100px}
-    .window{width:calc(100vw - 8px);left:4px;top:8px;height:calc(100vh - 44px - 8px);max-height:calc(100vh - 44px - 8px)}
+    .window{width:calc(100vw - 8px);left:4px;top:8px;height:calc(100vh - 44px - 8px);max-height:calc(100vh - 44px - 8px);display:flex;flex-direction:column;}
+    .window .content{flex:1;overflow:auto;}
     .btn{width:30px;height:30px;font-size:18px}
     .titlebar{height:34px}
     .taskbar{grid-template-rows:28px 16px}
@@ -83,45 +84,27 @@
 <script>
 (function(){
   'use strict';
-
-  // Fail-safe: zeige Fehler statt komplettem Ausfall
   function panic(msg){ try{ var b=document.createElement('div'); b.style.position='fixed'; b.style.left='6px'; b.style.bottom='52px'; b.style.zIndex='6500'; b.style.background='#c3c7cb'; b.style.border='2px solid #808080'; b.style.padding='6px 8px'; b.textContent='Fehler: '+msg; document.body.appendChild(b);}catch(e){} }
   window.addEventListener('error', function(e){ panic(e.message); });
-
   var ICONS={
     start:'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect x="4" y="20" width="24" height="18" fill="#f35325"/><rect x="36" y="20" width="24" height="18" fill="#81bc06"/><rect x="4" y="42" width="24" height="18" fill="#05a6f0"/><rect x="36" y="42" width="24" height="18" fill="#ffba08"/></svg>'),
     folder:'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="2" y="14" width="44" height="30" fill="#ffe27a" stroke="#b79c2a"/><rect x="2" y="10" width="18" height="6" fill="#fff3a6" stroke="#b79c2a"/><rect x="4" y="18" width="40" height="24" fill="#ffef9e"/><rect x="4" y="18" width="40" height="1" fill="#fff"/><rect x="4" y="41" width="40" height="1" fill="#caa93b"/></svg>'),
     pc:'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><rect x="6" y="16" width="36" height="20" fill="#b4b9bf" stroke="#6b6f72"/><rect x="12" y="12" width="8" height="6" fill="#8e9499"/><rect x="32" y="12" width="6" height="4" fill="#6b6f72"/><circle cx="24" cy="26" r="7" fill="#2e3b46"/><circle cx="24" cy="26" r="4" fill="#5ea5ff"/></svg>')
   };
-
   var DATA={
-    icons:[
-      {id:'ausbildung',label:'Ausbildung',icon:'folder'},
-      {id:'erfahrung',label:'Berufserfahrung',icon:'folder'},
-      {id:'portfolio',label:'Portfolio',icon:'pc'}
-    ],
-    ausbildung:[  
-      {period:'08/2016 - 08/2020',title:'Ausbildung Mediamatiker',place:'HKV Schaffhausen – Lehrbetrieb: sasag Kabelkommunikation AG'}
-    ],
+    icons:[{id:'ausbildung',label:'Ausbildung',icon:'folder'},{id:'erfahrung',label:'Berufserfahrung',icon:'folder'},{id:'portfolio',label:'Portfolio',icon:'pc'}],
+    ausbildung:[{period:'08/2016 - 08/2020',title:'Ausbildung Mediamatiker',place:'HKV Schaffhausen – Lehrbetrieb: sasag Kabelkommunikation AG'}],
     zertifikate:['English Certificate B2 (First)','Französisch Zertifikat DELF B2'],
-    erfahrung:[
-      {period:'07/2022 - heute',company:'betterview AG',items:['Brand Design & Social Organic','Creatives für Paid Social, (D)OOH, PR etc.','Fotografie, Videografie','Aufbau und Führung des Medienteams']},
-      {period:'09/2021 - heute',company:'Freelancing 20%',items:['Fotografie & Videografie','Grafikdesign','Ads Produktionen für Paid Social']},
-      {period:'06/2021 - 07/2022',company:'Laserhaus GmbH',items:['Webdesign (CMS/HTML/CSS/PHP)','Grafik-Daten für den Laser (Illustrator)','Produktfotografie + Videografie','Marketing (Paid Social, Paid Search)']},
-      {period:'01/2021 - 05/2021',company:'Rekrutenschule',items:[]},
-      {period:'08/2020 - 12/2020',company:'sasag Kabelkommunikation AG',items:['Printdesign + Produktdesign','Webdesign (WordPress/HTML/CSS/PHP)','Videografie/Fotografie','Support/Beratung/Verkauf']}
-    ],
+    erfahrung:[{period:'07/2022 - heute',company:'betterview AG',items:['Brand Design & Social Organic','Creatives für Paid Social, (D)OOH, PR etc.','Fotografie, Videografie','Aufbau und Führung des Medienteams']},{period:'09/2021 - heute',company:'Freelancing 20%',items:['Fotografie & Videografie','Grafikdesign','Ads Produktionen für Paid Social']},{period:'06/2021 - 07/2022',company:'Laserhaus GmbH',items:['Webdesign (CMS/HTML/CSS/PHP)','Grafik-Daten für den Laser (Illustrator)','Produktfotografie + Videografie','Marketing (Paid Social, Paid Search)']},{period:'01/2021 - 05/2021',company:'Rekrutenschule',items:[]},{period:'08/2020 - 12/2020',company:'sasag Kabelkommunikation AG',items:['Printdesign + Produktdesign','Webdesign (WordPress/HTML/CSS/PHP)','Videografie/Fotografie','Support/Beratung/Verkauf']}],
     personalien:{Geburtsdatum:'06.07.2000',Adresse:'Vortstadt 3',Wohnort:'8200 Schaffhausen',Telefon:'078 926 36 24',EMail:'gioelesanapo@icloud.com'},
     sprachen:[{name:'Deutsch',level:'Muttersprache'},{name:'Englisch',level:'Fliessend'},{name:'Französisch',level:'Fortgeschritten (schriftlich)'},{name:'Italienisch',level:'Fortgeschritten (schriftlich)'}],
     interessen:['Wandern','Fitness','Muay Thai','Malen']
   };
-
   var $=function(s){return document.querySelector(s)};
   var desktop=$('#desktop'), tasks=$('#tasks'), startBtn=$('#startBtn'), startMenu=$('#startMenu'), clockEl=$('#clock');
   var zTop=10; function isMobile(){ return window.matchMedia('(max-width: 640px)').matches; }
   function bringToFront(win){ zTop=Math.min(zTop+1,2990); win.style.zIndex=zTop; }
   function mkBtn(txt){ var b=document.createElement('button'); b.className='btn'; b.textContent=txt; return b; }
-
   function openWindow(id,title,html){
     var ex=document.querySelector('.window[data-id="'+id+'"]'); if(ex){ bringToFront(ex); return ex; }
     var w=document.createElement('div'); w.className='window'; w.dataset.id=id;
@@ -135,18 +118,13 @@
     bar.appendChild(t); bar.appendChild(ctr);
     var c=document.createElement('div'); c.className='content'; c.innerHTML=html;
     w.appendChild(bar); w.appendChild(c); document.body.appendChild(w); bringToFront(w);
-
     if(isMobile()){
-      w.style.left='4px'; w.style.top='8px';
-      w.style.width=(window.innerWidth-8)+'px';
-      var reserve=44+8; w.style.height=(window.innerHeight-reserve)+'px';
+      w.style.left='4px'; w.style.top='8px'; w.style.width=(window.innerWidth-8)+'px'; var reserve=44+8; w.style.height=(window.innerHeight-reserve)+'px';
     }
-
     var isDown=false, sx=0, sy=0, ox=0, oy=0, pid=null;
     bar.addEventListener('pointerdown',function(e){ if(e.target.closest('.controls')) return; isDown=true; var r=w.getBoundingClientRect(); sx=r.left; sy=r.top; ox=e.clientX; oy=e.clientY; pid=e.pointerId||null; if(pid!=null && bar.setPointerCapture) bar.setPointerCapture(pid); document.body.style.cursor='grabbing'; bringToFront(w); });
     window.addEventListener('pointermove',function(e){ if(!isDown) return; var nx=sx+(e.clientX-ox), ny=sy+(e.clientY-oy); w.style.left=Math.max(0,Math.min(window.innerWidth-100,nx))+'px'; w.style.top=Math.max(0,Math.min(window.innerHeight-60,ny))+'px'; });
     window.addEventListener('pointerup',function(){ isDown=false; document.body.style.cursor='default'; if(pid!=null && bar.releasePointerCapture) bar.releasePointerCapture(pid); pid=null; });
-
     var task=document.createElement('button'); task.className='task'; task.textContent=title; tasks.appendChild(task);
     bX.addEventListener('click',function(){ tasks.removeChild(task); w.remove(); });
     bMin.addEventListener('click',function(){ w.style.display='none'; w.dataset.min='1'; });
@@ -154,22 +132,17 @@
     task.addEventListener('click',function(){ if(w.style.display==='none'){ w.style.display='flex'; w.dataset.min=''; bringToFront(w);} else { bringToFront(w);} });
     return w;
   }
-
   function buildAusbildung(){ var s='<h3>Ausbildung</h3><ul class="list">'; DATA.ausbildung.forEach(function(a){ s+='<li class="li"><strong>'+a.period+'</strong><br>'+a.title+' <span class="muted">– '+a.place+'</span></li>'; }); s+='</ul>'; if(DATA.zertifikate.length){ s+='<h4 style="margin:12px 0 6px">Zertifikate</h4><ul class="list">'; DATA.zertifikate.forEach(function(z){ s+='<li class="li">'+z+'</li>';}); s+='</ul>'; } return s; }
   function buildErfahrung(){ var s='<h3>Berufliche Erfahrungen</h3>'; DATA.erfahrung.forEach(function(job){ s+='<div class="li"><div><strong>'+job.period+'</strong> – '+job.company+'</div>'; if(job.items.length){ s+='<ul>'; job.items.forEach(function(i){ s+='<li>'+i+'</li>';}); s+='</ul>'; } s+='</div>'; }); return s; }
   function buildAboutIntro(){ var s=''; s+='<p>Mein erster eigener PC lief noch mit Windows 98, eine langsame, etwas klapprige Kiste. Trotzdem war er für mich das Tor in eine neue Welt.</p>'; s+='<p>Anfänglich setzte ich meine Energie dazu ein, Lösungen zu finden, die Sperrprogramme, welche von der Mutter zur Beschränkung der Bildschirmzeit eingesetzt wurden, zu umgehen. Schon bald entdeckte ich die Möglichkeiten der Bildbearbeitung und die damit verbundenen Chancen, meine Kreativität auszuleben.</p>'; s+='<p>Mit 12 habe ich in Photoshop meine Freunde humorvoll digital optimiert, und mit Windows Movie Maker Lego-Stop-Motion-Filme gebastelt.</p>'; s+='<p>Diese Neugier und Kreativität von damals sind bis heute die Basis für meine Arbeit als Creative. Ideen entwickeln, Technologien nutzen und Inhalte schaffen, die wirken.</p>'; return s; }
   function buildAbout(){ var p=DATA.personalien, s='<h3>Über mich</h3>'+buildAboutIntro(); s+='<h4>Personalien</h4><div class="kv">'+'<div class="k">Geburtsdatum</div><div>'+p.Geburtsdatum+'</div>'+'<div class="k">Adresse</div><div>'+p.Adresse+'</div>'+'<div class="k">Wohnort</div><div>'+p.Wohnort+'</div>'+'<div class="k">Telefon</div><div><a href="tel:+41789263624">'+p.Telefon+'</a></div>'+'<div class="k">E‑Mail</div><div><a href="mailto:'+p.EMail+'">'+p.EMail+'</a></div>'+'</div>'; s+='<h4>Sprachen</h4><ul class="list">'; DATA.sprachen.forEach(function(x){ s+='<li class="li"><strong>'+x.name+'</strong> – '+x.level+'</li>';}); s+='</ul>'; s+='<h4>Interessen</h4><ul class="list">'; DATA.interessen.forEach(function(x){ s+='<li class="li">'+x+'</li>';}); s+='</ul>'; return s; }
   function buildPortfolio(){ return '<h3>Portfolio</h3><p class="muted">Wird gerade kuratiert – auf Anfrage sende ich dir gerne Projekte (Fotografie, Videografie, Ads, Projekte).</p>'; }
-
   function makeIcon(obj){ var b=document.createElement('button'); b.className='icon'; b.title=obj.label; b.setAttribute('aria-label',obj.label); var i=document.createElement('img'); i.src=ICONS[obj.icon]; i.alt=obj.label; var l=document.createElement('div'); l.className='label'; l.textContent=obj.label; b.appendChild(i); b.appendChild(l); var isTouch=('ontouchstart' in window) || (navigator.maxTouchPoints>0); b.addEventListener('click',function(){ document.querySelectorAll('.icon').forEach(function(x){x.classList.remove('selected')}); b.classList.add('selected'); if(isTouch) openApp(obj.id,obj.label); }); b.addEventListener('dblclick',function(){ if(!isTouch) openApp(obj.id,obj.label); }); b.addEventListener('keydown',function(e){ if(e.key==='Enter') openApp(obj.id,obj.label); }); return b; }
   function renderDesktop(){ desktop.innerHTML=''; DATA.icons.forEach(function(x){ desktop.appendChild(makeIcon(x)); }); }
   function openApp(id,label){ var html=''; if(id==='ausbildung') html=buildAusbildung(); else if(id==='erfahrung') html=buildErfahrung(); else if(id==='portfolio') html=buildPortfolio(); else if(id==='about') html=buildAbout(); openWindow(id,label,html); }
-
   function bindStart(){ document.getElementById('startLogo').src=ICONS.start; startBtn.addEventListener('click',function(e){ e.stopPropagation(); startMenu.style.display = (startMenu.style.display==='block')?'none':'block'; }); document.addEventListener('click',function(e){ if(!e.target.closest('#startMenu') && !e.target.closest('#startBtn')) startMenu.style.display='none'; }); startMenu.addEventListener('click',function(e){ var it=e.target.closest('.mi'); if(!it) return; var a=it.dataset.a; if(a==='about') openApp('about','Über mich'); startMenu.style.display='none'; }); }
-
   function tick(){ var d=new Date(),h=('0'+d.getHours()).slice(-2),m=('0'+d.getMinutes()).slice(-2); clockEl.textContent=h+':'+m; }
   setInterval(function(){ try{ tick(); }catch(e){} },1000); try{ tick(); }catch(e){}
-
   try{ renderDesktop(); }catch(e){ panic('Desktop '+e.message); }
   try{ bindStart(); }catch(e){ panic('Startmenü '+e.message); }
   try{ openApp('about','Über mich'); }catch(e){ panic('Über mich '+e.message); }
